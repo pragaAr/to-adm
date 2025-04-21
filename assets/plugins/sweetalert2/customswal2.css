@@ -1,0 +1,18 @@
+.swal2-popup {
+  /* font-size: 0.8rem !important;
+  width: 26em !important; */
+  background: #454d55 !important;
+}
+
+.swal2-title,
+.swal2-html-container {
+  color: #ffffff !important;
+}
+
+.swal2-icon.swal2-success .swal2-success-ring {
+  border-color: ligthen(#28a745, 20%) !important;
+}
+
+body.swal2-height-auto {
+  height: 100vh !important;
+}
