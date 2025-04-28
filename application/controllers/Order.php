@@ -331,7 +331,17 @@ class Order extends CI_Controller
 
     $response = $this->Order->updateData($dataOrder, $dataSangu, $where, $whereOldTruck, $whereOldSopir, $oldDataTruck, $oldDataSopir, $whereNewTruck, $whereNewSopir, $newDataTruck, $newDataSopir);
 
-    echo json_encode($response);
+    if ($response) {
+      echo json_encode([
+        'status' => true,
+        'message' => 'Order berhasil diupdate.'
+      ]);
+    } else {
+      echo json_encode([
+        'status' => false,
+        'message' => 'Gagal mengupdate order.'
+      ]);
+    }
   }
 
   public function updateStatus()
