@@ -806,6 +806,7 @@ $("#orderTables").on("click", ".btn-update", function () {
               },
               success: function (data) {
                 const parsedData = JSON.parse(data);
+
                 const status = parsedData.status;
                 const message = parsedData.message;
 

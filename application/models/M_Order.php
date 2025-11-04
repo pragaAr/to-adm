@@ -7,7 +7,7 @@ class M_Order extends CI_Model
 {
   public function getKd()
   {
-    $this->db->select('RIGHT(order_masuk.no_order,3) as no_order', FALSE)
+    $this->db->select('RIGHT(order_masuk.no_order,5) as no_order', FALSE)
       ->order_by('no_order', 'DESC')
       ->limit(1);
 
@@ -303,34 +303,39 @@ class M_Order extends CI_Model
 
   public function updateStatusOrder($id, $truckid, $sopirid)
   {
-    $this->db->trans_start();
+    $this->db->trans_begin();
 
     $statusOrder  = [
       'status_order'      => 'selesai',
       'dateUpdateStatus'  => date('Y-m-d H:i:s')
     ];
 
-    $whereidorder = ['id' => $id];
+    $this->db->update('order_masuk', $statusOrder, ['id' => $id]);
+    if ($this->db->affected_rows() < 1) {
+      log_message('error', "Order ID {$id} gagal diperbarui.");
+      $this->db->trans_rollback();
+      return false;
+    }
 
-    $this->db->update('order_masuk', $statusOrder, $whereidorder);
+    $this->db->update('sopir', ['status_sopir' => 0], ['id' => $sopirid]);
+    if ($this->db->affected_rows() < 1) {
+      log_message('error', "Sopir ID {$sopirid} gagal diperbarui.");
+      $this->db->trans_rollback();
+      return false;
+    }
 
-    $statussopir  = ['status_sopir' => 0];
-
-    $wheresopirid = ['id' => $sopirid];
-
-    $this->db->update('sopir', $statussopir, $wheresopirid);
-
-    $statustruck  = ['status_truck' => 0];
-
-    $wheretruckid = ['id' => $truckid];
-
-    $this->db->update('armada', $statustruck, $wheretruckid);
-
-    $this->db->trans_complete();
+    $this->db->update('armada', ['status_truck' => 0], ['id' => $truckid]);
+    if ($this->db->affected_rows() < 1) {
+      log_message('error', "Truck ID {$truckid} gagal diperbarui.");
+      $this->db->trans_rollback();
+      return false;
+    }
 
     if ($this->db->trans_status() === FALSE) {
+      $this->db->trans_rollback();
       return false;
     } else {
+      $this->db->trans_commit();
       return true;
     }
   }

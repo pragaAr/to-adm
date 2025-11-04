@@ -331,7 +331,17 @@ class Order extends CI_Controller
 
     $response = $this->Order->updateData($dataOrder, $dataSangu, $where, $whereOldTruck, $whereOldSopir, $oldDataTruck, $oldDataSopir, $whereNewTruck, $whereNewSopir, $newDataTruck, $newDataSopir);
 
-    echo json_encode($response);
+    if ($response) {
+      echo json_encode([
+        'status' => true,
+        'message' => 'Order berhasil diupdate.'
+      ]);
+    } else {
+      echo json_encode([
+        'status' => false,
+        'message' => 'Gagal mengupdate order.'
+      ]);
+    }
   }
 
   public function updateStatus()
@@ -341,10 +351,18 @@ class Order extends CI_Controller
 
     $query = $this->Sangu->getDataTrucSopirkByKdOrder($kd);
 
-    $truckid = $query->truck_id;
-    $sopirid = $query->sopir_id;
+    if (!$query) {
+      echo json_encode([
+        'status' => false,
+        'message' => 'Data order tidak ditemukan.'
+      ]);
+      return;
+    }
 
-    if (!$truckid || !$sopirid) {
+    $truckid = $query->truck_id ?? null;
+    $sopirid = $query->sopir_id ?? null;
+
+    if (empty($truckid) || empty($sopirid)) {
       echo json_encode([
         'status' => false,
         'message' => 'Truck atau Sopir tidak terdeteksi untuk order ini.'
@@ -354,17 +372,10 @@ class Order extends CI_Controller
 
     $result = $this->Order->updateStatusOrder($id, $truckid, $sopirid);
 
-    if ($result) {
-      echo json_encode([
-        'status' => true,
-        'message' => 'Status berhasil diupdate.'
-      ]);
-    } else {
-      echo json_encode([
-        'status' => false,
-        'message' => 'Gagal mengupdate status.'
-      ]);
-    }
+    echo json_encode([
+      'status' => $result,
+      'message' => $result ? 'Status berhasil diupdate.' : 'Gagal mengupdate status.'
+    ]);
   }
 
   public function delete()

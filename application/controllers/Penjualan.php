@@ -3,8 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 date_default_timezone_set('Asia/Jakarta');
 
-use Mpdf\Mpdf;
-
 class Penjualan extends CI_Controller
 {
   public function __construct()
