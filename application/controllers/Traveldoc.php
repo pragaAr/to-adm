@@ -63,7 +63,7 @@ class Traveldoc extends CI_Controller
       $reccu[] = $item->reccu;
     }
 
-    $detail = $this->SJ->getDetailData($reccu);
+    $detail = $this->SJ->getDetailData($nomor, $reccu);
 
     $response = [
       'nomor'   => $query->nomor_surat,
@@ -244,7 +244,7 @@ class Traveldoc extends CI_Controller
           $reccu[] = $item->reccu;
         }
 
-        $detail = $this->SJ->getDetailData($reccu);
+        $detail = $this->SJ->getDetailData($str, $reccu);
 
         $data = [
           'title'   => 'Tanda Terima Surat Jalan',

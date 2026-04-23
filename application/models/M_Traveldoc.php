@@ -80,10 +80,11 @@ class M_Traveldoc extends CI_Model
     return $query;
   }
 
-  public function getDetailData($reccu)
+  public function getDetailData($str, $reccu)
   {
     $this->db->select('reccu, ket, surat_jalan, berat, retur')
       ->from('detail_sj')
+      ->where('nomor_surat', $str)
       ->where_in('reccu', $reccu);
 
     $query = $this->db->get()->result();
